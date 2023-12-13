@@ -4,6 +4,11 @@ import joblib
 import pandas as pd
 
 st.header("Klasifikasi Artikel Berita Dengan Reduksi Dimensi", divider='rainbow')
+st.title("PROJEK UAS PPW")
+st.write("-------------------------------------------------------------------------------------------------------------------------")
+st.write("**Nama  : Amallia Tiara Putri**")
+st.write("**NIM   : 200411100025**")
+st.write("-------------------------------------------------------------------------------------------------------------------------")
 text = st.text_area("Masukkan Artikel Berita")
 
 button = st.button("Submit")
@@ -13,18 +18,18 @@ if "nb_reduksi" not in st.session_state:
     st.session_state.nb_asli = []
 
 if button:
-    vectorizer = joblib.load("resources/vectorizer.pkl")
+    vectorizer = joblib.load("vectorizer.pkl")
     tfidf_matrics = vectorizer.transform([text]).toarray()
     
     # Predict Model Naive Bayes Reduksi
-    model_reduksi = joblib.load("resources/NB_reduksi.pkl")
-    lda = joblib.load("resources/lda.pkl")
+    model_reduksi = joblib.load("naive bayes.pkl")
+    lda = joblib.load("lda.pkl")
     lda_transform = lda.transform(tfidf_matrics)
     prediction_reduksi = model_reduksi.predict(lda_transform)
     st.session_state.nb_reduksi = prediction_reduksi[0]
     
     # Predict Model Naive Bayes Tanpa Reduksi
-    model_asli = joblib.load("resources/NB_Asli.pkl")
+    model_asli = joblib.load("Naive Bayes (Asli).pkl")
     prediction_asli = model_asli.predict(tfidf_matrics)
     st.session_state.nb_asli = prediction_asli[0]
 
@@ -37,9 +42,9 @@ selected = option_menu(
 
 if selected == "Dataset Information":
     st.write("Dataset Asli")
-    st.dataframe(pd.read_csv('resources/Data Berita CNBC.csv'), use_container_width=True)
+    st.dataframe(pd.read_csv('Dataset_Berita_UAS.csv'), use_container_width=True)
     st.write("Dataset Hasil Reduksi Dimensi")
-    st.dataframe(pd.read_csv('resources/reduksi dimensi.csv'), use_container_width=True)
+    st.dataframe(pd.read_csv('reduksi dimensi.csv'), use_container_width=True)
 
 
 elif selected == "Klasifikasi":
@@ -54,4 +59,4 @@ elif selected == "Klasifikasi":
         
 elif selected == "History Uji Coba":
     st.write("Hasil Uji Coba")
-    st.dataframe(pd.read_csv('resources/history.csv'), use_container_width=True)
+    st.dataframe(pd.read_csv('history.csv'), use_container_width=True)
